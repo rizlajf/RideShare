@@ -1,0 +1,8 @@
+Application has thrown an uncaught exception and is terminated:
+ReferenceError: request is not defined
+    at C:\Test_Project\RideShareServer\RideShareServer\DBAccessLayer\DBOperations.js:103:30
+    at Query.<anonymous> (C:\Test_Project\RideShareServer\RideShareServer\node_modules\mongoose\lib\model.js:3352:16)
+    at C:\Test_Project\RideShareServer\RideShareServer\node_modules\kareem\index.js:244:21
+    at C:\Test_Project\RideShareServer\RideShareServer\node_modules\kareem\index.js:127:16
+    at _combinedTickCallback (internal/process/next_tick.js:67:7)
+    at process._tickCallback (internal/process/next_tick.js:98:9)
