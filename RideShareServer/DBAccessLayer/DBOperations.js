@@ -1,5 +1,5 @@
 ﻿var mongoose = require('mongoose');
-var bcrypt = require('bcrypt');
+//var bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 
 mongoose.connect("mongodb://localhost/RiderShareDb");
@@ -32,7 +32,7 @@ db.once('open', function () {
     console.log("RiderShareDb is open...");
 });
 
-var salt = bcrypt.genSaltSync(10);
+//var salt = bcrypt.genSaltSync(10);
 
 exports.Register = function (request, response) {
     
@@ -52,8 +52,13 @@ exports.Register = function (request, response) {
     );
     
     function CreateUser() {
-        var passwordToSave = bcrypt.hashSync(request.body.PassWord, salt);
-        //var passwordToSave = request.body.PassWord;
+        //bcrypt.genSalt(10, function (err, salt) {
+        //    bcrypt.hash(request.body.PassWord, salt, function (err, hash) {
+        //        var passwordToSave = hash;
+        //    });
+        //});
+        //var passwordToSave = bcrypt.hashSync(request.body.PassWord, salt);
+        var passwordToSave = request.body.PassWord;
         var NewRider = { FirstName: request.body.FirstName, LastName: request.body.LastName, UserName: request.body.UserName, PassWord: passwordToSave, Email: request.body.Email, UserType: request.body.userType };
         RiderModel.create(NewRider, function (addError, addedRider) {
             if (addError) {
@@ -72,9 +77,20 @@ exports.AuthenticateUser = function (request, response) {
     function (error, user) {
             if (error)
                 response.send(500, { error: addError });
-            if (user && bcrypt.compareSync(request.body.PassWord, user.PassWord)) {
-                var token = jwt.sign(user, "secret");
-                GetUserCordinates(token);
+           
+            //if (user && bcrypt.compareSync(request.body.PassWord, user.PassWord)) { 
+            if (user) {
+                //bcrypt.compare(request.body.PassWord, hash, function (err, res) {
+                //    if (res === true) {
+                //        var token = jwt.sign(user, "secret");
+                //        GetUserCordinates(token);
+                //    }
+                //});       
+                
+                if (request.body.PassWord === user.PassWord) {
+                    var token = jwt.sign(user, "secret");
+                    GetUserCordinates(token);
+                }
             }
             else
                 response.json({ success: false, Message: 'Authentication failed' });
@@ -166,12 +182,25 @@ exports.fetchDrivers = function (request, response) {
 
 //test methods
 exports.fetch = function (request, response) {
-    RiderModel.find().exec(function (err, res) {
+    RiderModel.find({}, function (err, users) {
         if (err) {
             response.send(500, { error: err });
         }
         else {
-            response.send(res);
+
+            var userDatas = new Array();
+            users.forEach(function (user) {
+                var userData = {};
+                userData.UserName = user.UserName;
+                userData.Email = user.Email;
+                userData.FirstName = user.FirstName;
+                userData.LastName = user.LastName;
+                userData.Longitude = user.Longitude;
+                userData.Latitude = user.Latitude;
+                userDatas.push(userData);
+            });
+            
+            response.send({ users: userDatas, success: true });
         }
     });
 };

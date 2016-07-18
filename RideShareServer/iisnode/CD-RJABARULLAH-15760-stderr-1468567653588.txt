@@ -1,7 +1,8 @@
 Application has thrown an uncaught exception and is terminated:
-TypeError: res.send is not a function
-    at C:\Test_Project\RideShareServer\RideShareServer\DBAccessLayer\DBOperations.js:161:17
-    at Query.<anonymous> (C:\Test_Project\RideShareServer\RideShareServer\node_modules\mongoose\lib\query.js:2181:28)
+Error: data and hash arguments required
+    at Object.module.exports.compareSync (C:\Test_Project\RideShareServer\RideShareServer\node_modules\bcrypt\bcrypt.js:127:15)
+    at C:\Test_Project\RideShareServer\RideShareServer\DBAccessLayer\DBOperations.js:75:32
+    at Query.<anonymous> (C:\Test_Project\RideShareServer\RideShareServer\node_modules\mongoose\lib\model.js:3352:16)
     at C:\Test_Project\RideShareServer\RideShareServer\node_modules\kareem\index.js:244:21
     at C:\Test_Project\RideShareServer\RideShareServer\node_modules\kareem\index.js:127:16
     at _combinedTickCallback (internal/process/next_tick.js:67:7)
