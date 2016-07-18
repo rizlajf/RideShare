@@ -77,7 +77,7 @@ exports.AuthenticateUser = function (request, response) {
     function (error, user) {
             if (error)
                 response.send(500, { error: addError });
-           
+            
             //if (user && bcrypt.compareSync(request.body.PassWord, user.PassWord)) { 
             if (user) {
                 //bcrypt.compare(request.body.PassWord, hash, function (err, res) {
@@ -89,26 +89,30 @@ exports.AuthenticateUser = function (request, response) {
                 
                 if (request.body.PassWord === user.PassWord) {
                     var token = jwt.sign(user, "secret");
-                    GetUserCordinates(token);
+                    response.json({ success: true, token: token });
+                    //GetUserCordinates(token);
                 }
             }
             else
                 response.json({ success: false, Message: 'Authentication failed' });
         }
-    );
-    
-    function GetUserCordinates(token) {
-        UserLocationModel.findOne(
-            { UserName: request.body.UserName }, function (Error, userCordinate) {
-                if (Error)
-                    response.send(500, { Error: addError });
-                if (userCordinate.Longitude != null)
-                    response.json({ success: true, token: token, Longitude: userCordinate.Longitude, Latitude: userCordinate.Latitude });
-                else
-                    response.json({ success: true, token: token, UserLocation: 'Enter user cordinates' });
-            }
-        )
-    };
+    )
+
+};
+
+
+
+function GetUserCordinates(token) {
+    UserLocationModel.findOne(
+        { UserName: request.body.UserName }, function (Error, userCordinate) {
+            if (Error)
+                response.send(500, { Error: addError });
+            if (userCordinate.Longitude != null)
+                response.json({ success: true, token: token, Longitude: userCordinate.Longitude, Latitude: userCordinate.Latitude });
+            else
+                response.json({ success: true, token: token, UserLocation: 'Enter user cordinates' });
+        }
+    )
 };
 
 exports.UpdateUser = function (req, res) {
@@ -187,7 +191,7 @@ exports.fetch = function (request, response) {
             response.send(500, { error: err });
         }
         else {
-
+            
             var userDatas = new Array();
             users.forEach(function (user) {
                 var userData = {};
