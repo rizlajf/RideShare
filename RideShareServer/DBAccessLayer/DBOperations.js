@@ -58,8 +58,8 @@ exports.Register = function (request, response) {
         //    });
         //});
         //var passwordToSave = bcrypt.hashSync(request.body.PassWord, salt);
-        var passwordToSave = request.body.PassWord;
-        var NewRider = { FirstName: request.body.FirstName, LastName: request.body.LastName, UserName: request.body.UserName, PassWord: passwordToSave, Email: request.body.Email, UserType: request.body.userType };
+        var passwordToSave = request.body.Password;
+        var NewRider = { FirstName: request.body.FirstName, LastName: request.body.LastName, UserName: request.body.UserName, PassWord: passwordToSave, Email: request.body.Email, userType: request.body.UserType };
         RiderModel.create(NewRider, function (addError, addedRider) {
             if (addError) {
                 response.send(500, { error: addError });
@@ -86,15 +86,19 @@ exports.AuthenticateUser = function (request, response) {
                 //        GetUserCordinates(token);
                 //    }
                 //});       
-                
-                if (request.body.PassWord === user.PassWord) {
+                console.log(request.body.UserName);
+                console.log(request.body.Password);
+                console.log(user.PassWord);
+                if (request.body.Password != user.PassWord) {
+                    response.json({ success: false, Message: 'Authentication failed' });
+                }
+                else {
                     var token = jwt.sign(user, "secret");
                     response.json({ success: true, token: token });
-                    //GetUserCordinates(token);
                 }
             }
             else
-                response.json({ success: false, Message: 'Authentication failed' });
+                response.json({ success: false, Message: 'User not found' });
         }
     )
 
@@ -123,7 +127,8 @@ exports.UpdateUser = function (req, res) {
             user.FirstName = req.body.UserName,
             user.LastName = req.body.UserName,
             user.UserName = req.body.UserName,
-            user.PassWord = bcrypt.hashSync(req.body.PassWord, salt),
+            //user.PassWord = bcrypt.hashSync(req.body.PassWord, salt),
+            user.PassWord = req.body.Password,
             user.Email = req.body.UserName,
             user.userType = req.body.UserType
             
@@ -201,6 +206,7 @@ exports.fetch = function (request, response) {
                 userData.LastName = user.LastName;
                 userData.Longitude = user.Longitude;
                 userData.Latitude = user.Latitude;
+                userData.userType = user.userType;
                 userDatas.push(userData);
             });
             

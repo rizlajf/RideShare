@@ -6,6 +6,7 @@ var jwt = require('jsonwebtoken');
 
 router.post('/newRider', DbOps.Register);
 router.post('/rider/auth', DbOps.AuthenticateUser);
+router.post('/rider/delete', DbOps.deleteUser);
 
 
 router.get('/', function (request, response) {
@@ -52,7 +53,6 @@ router.post('/rider', DbOps.UpdateUser);
 
 
 router.get('/ridersCordinates', DbOps.fetchLocations);
-router.post('/rider/delete', DbOps.deleteUser);
 
 
 
